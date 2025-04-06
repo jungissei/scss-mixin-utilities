@@ -1,0 +1,63 @@
+@use "sass:map";
+
+// ----------------------------------------------------------------------------
+// Media Query
+// ----------------------------------------------------------------------------
+$breakpoint: (
+  sp: 'screen and (max-width: 768px)',
+  pc: 'print, screen and (min-width: 769px)',
+);
+
+@mixin mq($bp) {
+  @media #{map.get($breakpoint, $bp)} {
+    @content;
+  }
+}
+
+
+// ---------------------------------------------------------------------------*
+// hover
+// ----------------------------------------------------------------------------
+// hover mixin
+@mixin hover($include-selectors: ()) {
+
+  @media (hover: hover) and (pointer: fine)  {
+    &:hover {
+      @content;
+    }
+
+    @if $include-selectors != (){
+      @each $selector in $include-selectors {
+        &#{$selector} {
+          @content;
+        }
+      }
+    }
+  }
+}
+
+
+
+// ----------------------------------------------------------------------------
+// Only for specific browsers
+// ----------------------------------------------------------------------------
+@mixin only_browser($browser) {
+  @if $browser == 'safari' {
+    @at-root _::-webkit-full-page-media, _:future, :root & {
+      @content;
+    }
+  } @else if $browser == 'firefox' {
+    @document url-prefix() {
+      @content;
+    }
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Only for specific languages
+// ----------------------------------------------------------------------------
+@mixin only_lang($lang) {
+  html[lang="#{$lang}"] & {
+    @content;
+  }
+}
